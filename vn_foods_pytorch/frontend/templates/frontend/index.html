@@ -1,0 +1,63 @@
+{% extends "frontend/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <form id="predict-form" method="post" enctype="multipart/form-data" style="margin-top: 50px; margin-bottom: 30px;">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" id="btnUpload" class="btn btn-primary">Upload</button>
+        </form>
+</div>
+
+{% if image_uri is not None %}
+    {% if predicted_label is not None %}
+        <div class="alert alert-primary" role="alert">
+            Predicted label: <b>{{ predicted_label }}</b>
+        </div>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            Prediction error. No label predicted.
+        </div>
+    {% endif %}
+
+    <img src="{{ image_uri }}" class="img-fluid" alt="Uploaded image"
+         style="max-width: min(500px, 100%); height: auto; margin-top: 30px;">
+{% endif %}
+
+
+<hr />
+
+<div class="container-fluid">
+    <table class="table table-striped table-sm" id="my_results">
+        <thead>
+            <tr>
+            <th>ID</th>
+            <th>Kết Quả</th>
+            <th>URL Address</th>
+            <th>Image</th>
+            <th>Độ Chính Xác</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for searchResult in searchResults %}
+        <tr>
+            <td>{{searchResult.id}}</td>
+            <td>{{searchResult.resultName}}</td>
+            <td>{{searchResult.url}}</td>
+            <td>{{searchResult.resultName}}</td>
+            <td>{{searchResult.accuracy}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock content %}
+
+
+{% block javascript %}
+<script>
+  
+</script>
+{% endblock javascript %}
+

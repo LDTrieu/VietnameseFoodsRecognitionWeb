@@ -1,0 +1,117 @@
+<!-- {% block javascript %}
+<script>
+    $(document).ready(function () {
+        /*
+            On submiting the form, send the POST ajax
+            request to server and after successfull submission
+            display the object.
+        */
+        $("#predict-form").submit(function (e) {
+            // preventing from page reload and default actions
+            e.preventDefault();
+            // serialize the data for sending the form data.
+            var serializedData = $(this).serialize();
+            // make POST ajax call
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'post_result' %}",
+                data: serializedData,
+                success: function (response) {
+                    // on successfull creating object
+                    // 1. clear the form.
+                    //$("#predict-form").trigger('reset');
+                    // 2. focus to nickname input 
+                    //$("#id_ketQua").focus();
+
+                    // display the newly friend to table.
+                    var instance = JSON.parse(response["instance"]);
+                    var fields = instance[0]["fields"];
+                    $("#my_results tbody").prepend(
+                        `<tr>
+                        <td>${fields["id"]||""}</td>
+                        <td>${fields["resultName"]||""}</td>
+                        <td>${fields["url"]||""}</td>
+                        <td>${fields["resultName"]||""}</td>
+                        <td>${fields["accuracy"]||""}</td>
+                        </tr>`
+                    )
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        })
+
+    })
+
+</script>
+{% endblock javascript %} -->
+
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        /*
+            On submiting the form, send the POST ajax
+            request to server and after successfull submission
+            display the object.
+        */
+        $("#predict-form").submit(function (e) {
+            // preventing from page reload and default actions
+            e.preventDefault();
+            // serialize the data for sending the form data.
+            var serializedData = $(this).serialize();
+            // make POST ajax call
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'predict_result' %}",
+                data: serializedData,
+                success: function (response) {
+                    // on successfull creating object
+                    // 1. clear the form.
+                    //$("#predict-form").trigger('reset');
+                    // 2. focus to nickname input 
+                    //$("#id_ketQua").focus();
+
+                    // display the newly friend to table.
+                    // var instance = JSON.parse(response["instance"]);
+                    // var fields = instance[0]["fields"];
+                    // $("#my_results tbody").prepend(
+                    //     `<tr>
+                    //     <td>${fields["id"]||""}</td>
+                    //     <td>${fields["resultName"]||""}</td>
+                    //     <td>${fields["url"]||""}</td>
+                    //     <td>${fields["resultName"]||""}</td>
+                    //     <td>${fields["accuracy"]||""}</td>
+                    //     </tr>`
+                    // )
+                    
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        })
+
+    })
+
+</script>
+{% endblock javascript %}
+
+
+{% block javascript1 %}
+    {% if predicted_label is not None %}
+        <div class="alert alert-primary" role="alert">
+            Predicted label: <b>{{ predicted_label }}</b>
+        </div>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            Prediction error. No label predicted.
+        </div>
+    {% endif %}
+
+    <img src="{{ image_uri }}" class="img-fluid" alt="Uploaded image"
+         style="max-width: min(500px, 100%); height: auto; margin-top: 30px;">
+{% endblock javascript1 %}
